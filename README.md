@@ -1,66 +1,242 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Shopping Cart System
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Este repositorio contiene un sistema de carrito de compras modular, organizado según los principios de **Arquitectura Hexagonal** y **DDD (Diseño Dirigido por el Dominio)**. Es altamente escalable y fácil de mantener, con un enfoque en la separación de responsabilidades y la reutilización de código.
 
-## About Laravel
+## 🚀 Características
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- **Carrito de compra**: Gestor robusto de carritos de compra con operaciones para añadir, actualizar, vaciar y eliminar productos.
+- **Dominio desacoplado**: Diseñado en torno a principios de DDD para garantizar que el código del dominio sea independiente de los frameworks.
+- **Contextos básicos**:
+    - **ShoppingCart**: Gestor del carrito y sus productos.
+    - **Order**: Creación de pedidos a partir del carrito.
+    - **Shared**: Componentes y servicios compartidos entre contextos.
+- **Casos de uso bien definidos**: Cada acción principal está modelada como un caso de uso para mantener un código limpio y simple.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 🔧 Tecnologías utilizadas
 
-## Learning Laravel
+- **PHP** (versión 8.2).
+- **Laravel** como framework de infraestructura.
+- **MySQL** como base de datos predeterminada (aunque el sistema soporta otros DBMS gracias al desacoplamiento).
+- **PHPUnit** para las pruebas unitarias y de integración.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+---
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## 🔒 Entidades principales
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Cart
+- Representa el carrito de compra.
+- Contiene los productos seleccionados por el cliente.
+- Atributos principales:
+    - `id`: Identificador único.
+    - `quantity`: Cantidad total de productos en el carrito.
+    - Relaciones:
+        - **HasMany** con `CartProduct`.
 
-## Laravel Sponsors
+### CartProduct
+- Representa un producto individual en el carrito.
+- Atributos principales:
+    - `id`: Identificador único.
+    - `cart_id`: Identificador del carrito asociado.
+    - `product_id`: Identificador del producto.
+    - `quantity`: Cantidad del producto en el carrito.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+---
 
-### Premium Partners
+## 📊 Contextos
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+### **ShoppingCart**
+Este contexto gestiona la lógica relacionada con el carrito de compra. Incluye los siguientes casos de uso:
 
-## Contributing
+- **AddProductToCartUseCase**: Agregar un producto al carrito.
+- **CreateCartUseCase**: Crear un nuevo carrito.
+- **EmptyCartUseCase**: Vaciar todos los productos del carrito.
+- **RemoveProductFromCartUseCase**: Eliminar un producto específico del carrito.
+- **UpdateCartProductUseCase**: Actualizar la cantidad de un producto en el carrito.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### **Order**
+Este contexto se centra en la creación de pedidos a partir de carritos confirmados. Incluye:
 
-## Code of Conduct
+- **CreateOrderFromCartUseCase**: Generar un pedido basado en un carrito existente.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### **Shared**
+Este contexto proporciona componentes y servicios compartidos entre los contextos `ShoppingCart` y `Order`. Ejemplo: DTOs, validaciones comunes y servicios auxiliares.
 
-## Security Vulnerabilities
+---
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## 🔍 Estructura del proyecto
 
-## License
+El proyecto sigue una estructura modular:
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```
+src/
+|-- Core/
+|   |-- ShoppingCart/
+|   |   |-- Application/
+|   |   |   |-- AddProductToCartUseCase
+|   |   |   |-- CreateCartUseCase
+|   |   |   |-- EmptyCartUseCase
+|   |   |   |-- RemoveProductFromCartUseCase
+|   |   |   |-- UpdateCartProductUseCase
+|   |   |-- Domain/
+|   |   |   |-- Entities
+|   |   |   |   |-- Cart
+|   |   |   |   |-- CartProduct
+|   |   |   |-- Repositories
+|   |   |       |-- CartProductRepositoryContract
+|   |   |       |-- CartRepositoryContract
+|   |   |-- Infrastructure/
+|   |       |-- Laravel/
+|   |           |-- Controllers/
+|   |           |   |-- AddProductToCartController
+|   |           |   |-- CreateCartController
+|   |           |   |-- RemoveCartProductController
+|   |           |   |-- UpdateCartProductController
+|   |           |-- Eloquent/
+|   |           |   |-- Cart
+|   |           |   |-- CartProduct
+|   |           |-- Provides/
+|   |           |-- Repositories/
+|   |           |   |-- CartProductRepositoryEloquent
+|   |           |   |-- CartRepositoryEloquent
+|   |           |-- Requests/
+|   |           |-- Responses/
+|   |-- Order/
+|   |   |-- Application/
+|   |       |-- CreateOrderFromCartUseCase
+|   |   |-- Domain/
+|   |       |-- Entities/
+|   |           |-- Order
+|-- Shared/
+    |-- Responses/
+    |-- Infrastructure/
+        |-- Controllers/
+            |-- ConfirmCartPurchaseController/
+```
+
+---
+
+## 🌎 API Endpoints
+
+Colección de Postman [ShoppingCart.postman_collection.json](./docs/ShoppingCart.postman_collection.json "cart-technical-challenge").
+
+
+### Crear un carrito
+**POST** `/api/v1/cart`
+
+#### Request:
+```json
+{}
+```
+#### Response:
+```json
+{
+    "id": 1,
+    "quantity": 0
+}
+```
+
+### Añadir un producto al carrito
+**POST** `/api/v1/cart/{cartId}/add/{productId}`
+
+#### Request:
+```json
+{
+    "quantity": 3
+}
+```
+#### Response:
+```json
+{
+    "id": 1,
+    "cartId": 1,
+    "productId": 2463,
+    "quantity": 3
+}
+```
+
+### Actualizar un producto del carrito
+**PUT** `/api/v1/cart/products/update/{cartProductId}`
+
+#### Request:
+```json
+{
+    "quantity": 3
+}
+```
+#### Response:
+```json
+{
+    "id": 1,
+    "cartId": 1,
+    "productId": 2463,
+    "quantity": 3
+}
+```
+
+### Eliminar un producto del carrito
+**DELETE** `/api/v1/cart/products/remove/{cartProductId}`
+
+#### Response:
+```json
+{
+    "id": 1,
+    "cartId": 1,
+    "productId": 2463,
+    "quantity": 3
+}
+```
+
+### Confirmar compra del carrito
+**GET** `/api/v1/cart/{cartId}/confirm`
+
+#### Response:
+```json
+{
+    "cartId": 1,
+    "quantity": 3
+}
+```
+
+
+
+---
+
+## 🌐 Configuración del entorno
+
+1. Clonar el repositorio:
+   ```bash
+   git clone https://github.com/palatinum/cart-technical-challenge.git
+   ```
+2. Crear el .env:
+   ```bash
+   cd cart-technical-challenge/
+   cp .env.example .env
+   ```
+3. Ejecutar docker:
+   ```bash
+   docker compose up -d
+   ```
+
+4. Ejecutar la instalacion de dependencias:
+   ```bash
+   docker exec -it challenge-app composer install
+   ```
+   
+5. Ejecutar las migraciones:
+   ```bash
+   docker exec -it challenge-app php artisan migrate
+   ```
+
+---
+
+## 📊 Pruebas
+
+Ejecuta las pruebas utilizando PHPUnit:
+
+```bash
+docker exec -it challenge-app vendor/bin/phpunit
+```
+
+---

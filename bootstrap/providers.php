@@ -1,5 +1,7 @@
 <?php
 
+use Core\ShoppingCart\Infrastructure\Laravel\Providers\RepositoryServiceProvider;
+
 return [
-    App\Providers\AppServiceProvider::class,
+    RepositoryServiceProvider::class,
 ];
